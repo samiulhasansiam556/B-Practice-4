@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 
 function NavOut() {
     return (
-        <nav className="bg-blue-600 p-4">
-            <div className="container mx-auto flex justify-between items-center">
+        <nav className="bg-blue-500 p-4">
+            <div className="container mx-auto flex justify-between items-center ">
                 {/* Title */}
                 <div className="text-white text-2xl font-bold">
                     MyApp
