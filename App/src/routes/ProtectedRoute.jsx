@@ -43,8 +43,7 @@ const ProtectedRoute = () => {
           },
 
         });
-
-        console.log(response)
+    
         localStorage.setItem("authuser",JSON.stringify(response.data.user))
 
         if (response.data.user) {

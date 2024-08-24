@@ -1,6 +1,5 @@
-import React from 'react';
+
 import NavIn from '../../components/nav/NavIn';
-import CreateTodo from '../CRUD/CreateTodo';
 import ReadTodos from '../CRUD/ReadTodos';
 
 function HomeIn() {

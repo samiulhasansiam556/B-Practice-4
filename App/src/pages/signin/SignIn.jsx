@@ -16,29 +16,29 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Input Validation
+
     if (!formData.email || !formData.password) {
       setError('All fields are required');
       return;
     }
 
     try {
-      // Post request to backend API
+     
       const response = await axios.post(`${url}/api/user/login`, formData);
 
-      // Handle successful login
+
       if (response.data.status === 'success') {
         toast.success(response.data.message, { position: 'top-right' });
         localStorage.setItem('authtoken', response.data.token);
-        navigate('/home'); // Redirect to the protected home page
+        navigate('/home'); 
       } else {
-        // Handle error response from backend
+      
         setError(response.data.message);
       }
     } catch (err) {
       console.error('Login error:', err);
 
-      // Handle cases where err.response is undefined
+      
       if (err.response && err.response.data) {
         setError(err.response.data.message || 'An error occurred');
       } else {

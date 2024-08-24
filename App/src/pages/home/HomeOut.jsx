@@ -1,6 +1,6 @@
-import React from 'react';
+
 import NavOut from '../../components/nav/NavOut';
-import backgroundImage from '../../assets/background.jpg'; // Add your background image in the assets folder
+import backgroundImage from '../../assets/background.jpg'; 
 
 function HomeOut() {
     return (

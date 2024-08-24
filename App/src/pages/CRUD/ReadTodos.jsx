@@ -68,7 +68,7 @@ function ReadTodos() {
     <div className="mt-1">
       <UpdateTodo
         isOpen={isUpdateModalOpen}
-        onClose={closeUpdateModal}
+         onClose={closeUpdateModal}
         todo={selectedTodo}
         onUpdate={fetchTodos}
       />
@@ -104,7 +104,7 @@ function ReadTodos() {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center h-48 text-center">
+        <div className="flex flex-col mt-28 items-center justify-center h-48 text-center">
           <p className="text-gray-500">No todos available</p>
           <button
             onClick={openCreateModal}

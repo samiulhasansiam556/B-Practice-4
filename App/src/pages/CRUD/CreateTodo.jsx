@@ -16,7 +16,7 @@ function CreateTodo({ isModalOpen, setIsModalOpen }) {
       toast.success(response.data.message);
       setTitle('');
       setDescription('');
-      setIsModalOpen(false); // Close the modal after successful creation
+      setIsModalOpen(false); 
     } catch (error) {
       toast.error(error.message || 'Failed to create todo');
     }
@@ -24,7 +24,7 @@ function CreateTodo({ isModalOpen, setIsModalOpen }) {
 
   return (
     <>
-      {/* Button to open the modal */}
+     
       <button
         onClick={() => setIsModalOpen(true)} // Open the modal on click
         className="fixed bottom-8 right-10 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 z-50"
@@ -32,7 +32,7 @@ function CreateTodo({ isModalOpen, setIsModalOpen }) {
         Create Note
       </button>
 
-      {/* Modal */}
+
       {isModalOpen && (
    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50 md:h-screen md:flex-1">
     <div className="bg-white p-6 md:w-1/2 sm:w-1/2 rounded-md shadow-lg relative w-full sm:w-xl lg:max-w-3xl  h-[80%]">

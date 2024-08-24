@@ -7,7 +7,6 @@ function SignUp() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    password: '',
     password_confirmation: ''
   });
   const [error, setError] = useState('');
@@ -22,8 +21,6 @@ function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(url)
-
     // Input Validation
     if (!formData.name || !formData.email || !formData.password || !formData.password_confirmation) {
       setError('All fields are required');
@@ -37,21 +34,20 @@ function SignUp() {
 
     try {
       // Post request to backend API
-      const response = await axios.post(`${url}/api/user/register`, formData);
+       const response = await axios.post(`${url}/api/user/register`, formData);
 
   
-        console.log(response)
       // Handle successful registration
       if (response.data.status === 'success') {
         toast.success(response.data.message, { position: 'top-right' });
         localStorage.setItem("authtoken",response.data.token)
-        navigate('/home'); // Redirect to Sign In page
+        navigate('/home'); 
       } else {
-        // Handle error response from backend
+        
         setError(response.data.message);
       }
     } catch (err) {
-      console.error(err); // Log the full error for debugging
+      console.error(err); 
 
       // Handle cases where err.response is undefined
       if (err.response && err.response.data) {

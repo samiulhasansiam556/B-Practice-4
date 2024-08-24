@@ -1,5 +1,5 @@
 import UserModel from "../models/User.js";
-import TodoModel from "../models/Todo.js";
+
 
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
@@ -100,9 +100,8 @@ class UserController {
       if (user) {
         const secret = user._id + process.env.JWT_SECRET_KEY
         const token = jwt.sign({ userID: user._id }, secret, { expiresIn: '15m' })
-        const link = `http://localhost:5173/resetpassword/${user._id}/${token}`
-        console.log(link)
-        console.log(user.email)
+        const link = `https://b-practice-4.netlify.app/resetpassword/${user._id}/${token}`
+      
         
        // Send Email
         let info = await transporter.sendMail({
@@ -114,32 +113,15 @@ class UserController {
         
         res.send({ "status": "success", "message": "Password Reset Email Sent... Please Check Your Email" })
 
-        
-        // var mailOptions = {
-        //       from: process.env.EMAIL_FROM,
-        //       to: user.email,
-        //       subject: "GeekShop - Password Reset Link",
-        //       html: `<a href=${link}>Click Here</a> to Reset Your Password`,
-        //   };
-
-        //   transporter.sendMail(mailOptions, function(error, info){
-        //     if (error) {
-        //       console.log(error);
-        //       res.send({ "status": "success", "message": "failed" })
-        //     } else {
-        //       console.log('Email sent: ' + info.response);
-        //       res.send({ "status": "success", "message": "Password Reset Email Sent... Please Check Your Email" })
-        //     }
-        //   });
-
-
       } else {
         res.send({ "status": "failed", "message": "Email doesn't exists" })
       }
     } else {
       res.send({ "status": "failed", "message": "Email Field is Required" })
     }
-  }
+  } 
+
+     
 
   static userPasswordReset = async (req, res) => {
     const { password, password_confirmation } = req.body
@@ -168,4 +150,32 @@ class UserController {
 
 }
 
-export default UserController
+export default UserController 
+
+
+
+
+
+
+
+
+
+
+
+
+// var mailOptions = {
+        //       from: process.env.EMAIL_FROM,
+        //       to: user.email,
+        //       subject: "GeekShop - Password Reset Link",
+        //       html: `<a href=${link}>Click Here</a> to Reset Your Password`,
+        //   };
+
+        //   transporter.sendMail(mailOptions, function(error, info){
+        //     if (error) {
+        //       console.log(error);
+        //       res.send({ "status": "success", "message": "failed" })
+        //     } else {
+        //       console.log('Email sent: ' + info.response);
+        //       res.send({ "status": "success", "message": "Password Reset Email Sent... Please Check Your Email" })
+        //     }
+        //   });
