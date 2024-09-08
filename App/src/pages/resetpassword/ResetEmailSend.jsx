@@ -36,7 +36,7 @@ const ResetEmailSend = () => {
 
       // Handle cases where err.response is undefined
       if (err.response && err.response.data) {
-        setError(err.response.data.message || 'An error occurred');
+        setError(err.response.data.message || 'An error occurre');
       } else {
         setError('An error occurred. Please try again.');
       }
