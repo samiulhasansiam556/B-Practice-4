@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 const ResetEmailSend = () => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // Track loading state
   const navigate = useNavigate();
 
   const url = import.meta.env.VITE_SERVER_URL;
@@ -20,26 +21,29 @@ const ResetEmailSend = () => {
     }
 
     try {
+      setLoading(true); // Disable further submissions
+
       // Post request to backend API
       const response = await axios.post(`${url}/api/user/send-reset-password-email`, { email });
 
       // Handle successful response
       if (response.data.status === 'success') {
         toast.success(response.data.message, { position: 'top-right' });
-        navigate('/signin'); // Redirect to Sign In page or another relevant page
+        navigate('/signin'); // Redirect to Sign In page
       } else {
-        // Handle error response from backend
-        setError(response.data.message);
+        setError(response.data.message); // Display backend error message
       }
     } catch (err) {
       console.error('Reset email error:', err);
 
       // Handle cases where err.response is undefined
       if (err.response && err.response.data) {
-        setError(err.response.data.message || 'An error occurre');
+        setError(err.response.data.message || 'An error occurred');
       } else {
         setError('An error occurred. Please try again.');
       }
+    } finally {
+      setLoading(false); // Re-enable the form after the request completes
     }
   };
 
@@ -55,13 +59,17 @@ const ResetEmailSend = () => {
             className="w-full p-2 border border-gray-300 rounded"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            disabled={loading} // Disable input during submission
           />
         </div>
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+          className={`w-full p-2 rounded text-white ${
+            loading ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'
+          }`}
+          disabled={loading} // Disable button during submission
         >
-          Send Password Reset Link
+          {loading ? 'Sending...' : 'Send Password Reset Link'}
         </button>
       </form>
     </div>

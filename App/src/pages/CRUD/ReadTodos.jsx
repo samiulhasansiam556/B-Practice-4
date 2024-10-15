@@ -7,11 +7,14 @@ import CreateTodo from "./CreateTodo";
 function ReadTodos() {
   const [todos, setTodos] = useState([]);
   const [selectedTodo, setSelectedTodo] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Shared state for CreateTodo modal
-  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false); // State for UpdateTodo modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [deletingTodoId, setDeletingTodoId] = useState(null);
+  const [loading, setLoading] = useState(true); // Loading state for fetching todos
   const url = import.meta.env.VITE_SERVER_URL;
 
   const fetchTodos = async () => {
+    setLoading(true); // Set loading to true when fetching begins
     try {
       const token = localStorage.getItem("authtoken");
       const response = await axios.get(`${url}/api/todo/get`, {
@@ -26,10 +29,13 @@ function ReadTodos() {
     } catch (error) {
       toast.error(error.message || "Failed to fetch todos");
       setTodos([]);
+    } finally {
+      setLoading(false); // Set loading to false once fetching is complete
     }
   };
 
   const handleTodoDeleted = async (deletedTodoId) => {
+    setDeletingTodoId(deletedTodoId);
     try {
       const token = localStorage.getItem("authtoken");
       await axios.delete(`${url}/api/todo/${deletedTodoId}`, {
@@ -39,6 +45,8 @@ function ReadTodos() {
       toast.success("Todo deleted successfully");
     } catch (error) {
       toast.error("Failed to delete Todo");
+    } finally {
+      setDeletingTodoId(null);
     }
   };
 
@@ -62,26 +70,28 @@ function ReadTodos() {
 
   useEffect(() => {
     fetchTodos();
-  }, [todos]);
+  }, []);
 
   return (
     <div className="mt-1">
       <UpdateTodo
         isOpen={isUpdateModalOpen}
-         onClose={closeUpdateModal}
+        onClose={closeUpdateModal}
         todo={selectedTodo}
         onUpdate={fetchTodos}
       />
-      <CreateTodo
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-      />
-      {todos && todos.length > 0 ? (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 px-10 ">
+      <CreateTodo isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+
+      {loading ? (
+        <div className="flex justify-center items-center h-48">
+          <i className="text-4xl fa-solid fa-spinner fa-spin text-gray-400" />
+        </div>
+      ) : todos && todos.length > 0 ? (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 px-10">
           {todos.map((todo) => (
             <div
               key={todo._id}
-              className="p-6 bg-slate-700 cursor-pointer text-gray-400 shadow-lg rounded-lg hover:shadow-xl transition-shadow relative cursor-pointer"
+              className="p-6 bg-slate-700 cursor-pointer text-gray-400 shadow-lg rounded-lg hover:shadow-xl transition-shadow relative"
               onClick={() => openUpdateModal(todo)}
             >
               <button
@@ -89,9 +99,13 @@ function ReadTodos() {
                   e.stopPropagation(); // Prevent the modal from opening when deleting
                   handleTodoDeleted(todo._id);
                 }}
-                className="absolute top-2  right-2 text-red-500 hover:text-red-700"
+                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
               >
-                <i className="text-xl fa-solid fa-xmark" />
+                {deletingTodoId === todo._id ? (
+                  <i className="text-xl fa-solid fa-spinner fa-spin" />
+                ) : (
+                  <i className="text-xl fa-solid fa-xmark" />
+                )}
               </button>
               <h3 className="text-lg font-bold mb-2">{todo.title}</h3>
               <textarea

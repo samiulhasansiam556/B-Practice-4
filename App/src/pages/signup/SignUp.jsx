@@ -7,17 +7,16 @@ function SignUp() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    password: '',
     password_confirmation: ''
   });
+
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // Track loading state
   const navigate = useNavigate();
   
   const url = import.meta.env.VITE_SERVER_URL;
-  
-  
-   
-   
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -33,28 +32,28 @@ function SignUp() {
     }
 
     try {
-      // Post request to backend API
-       const response = await axios.post(`${url}/api/user/register`, formData);
+      setLoading(true); // Disable the button by setting loading to true
 
-  
-      // Handle successful registration
+      // Post request to backend API
+      const response = await axios.post(`${url}/api/user/register`, formData);
+
       if (response.data.status === 'success') {
         toast.success(response.data.message, { position: 'top-right' });
-        localStorage.setItem("authtoken",response.data.token)
-        navigate('/home'); 
+        localStorage.setItem('authtoken', response.data.token);
+        navigate('/home');
       } else {
-        
         setError(response.data.message);
       }
     } catch (err) {
-      console.error(err); 
+      console.error(err);
 
-      // Handle cases where err.response is undefined
       if (err.response && err.response.data) {
         setError(err.response.data.message || 'An error occurred');
       } else {
         setError('An error occurred. Please try again.');
       }
+    } finally {
+      setLoading(false); // Re-enable the button after request completes
     }
   };
 
@@ -70,6 +69,7 @@ function SignUp() {
             className="w-full p-2 border border-gray-300 rounded"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            disabled={loading} // Disable input if loading
           />
         </div>
         <div className="mb-4">
@@ -79,6 +79,7 @@ function SignUp() {
             className="w-full p-2 border border-gray-300 rounded"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            disabled={loading} // Disable input if loading
           />
         </div>
         <div className="mb-4">
@@ -88,6 +89,7 @@ function SignUp() {
             className="w-full p-2 border border-gray-300 rounded"
             value={formData.password}
             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            disabled={loading} // Disable input if loading
           />
         </div>
         <div className="mb-6">
@@ -97,18 +99,24 @@ function SignUp() {
             className="w-full p-2 border border-gray-300 rounded"
             value={formData.password_confirmation}
             onChange={(e) => setFormData({ ...formData, password_confirmation: e.target.value })}
+            disabled={loading} // Disable input if loading
           />
         </div>
-        <button type='submit' className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
-          Sign Up
+        <button
+          type="submit"
+          className={`w-full p-2 rounded text-white ${loading ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'}`}
+          disabled={loading} // Disable button if loading
+        >
+          {loading ? 'Signing Up...' : 'Sign Up'}
         </button>
         <button
-            type="button"
-            onClick={() => navigate('/signin')}
-            className="w-full bg-green-500 text-white p-2 my-3 rounded hover:bg-green-600"
-          >
-            I have an account
-          </button>
+          type="button"
+          onClick={() => navigate('/signin')}
+          className="w-full bg-green-500 text-white p-2 my-3 rounded hover:bg-green-600"
+          disabled={loading} // Prevent navigation during loading
+        >
+          I have an account
+        </button>
       </form>
     </div>
   );

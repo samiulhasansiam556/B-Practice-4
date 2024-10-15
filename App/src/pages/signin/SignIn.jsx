@@ -9,6 +9,7 @@ const SignIn = () => {
     password: ''
   });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // Track loading state
   const navigate = useNavigate();
 
   const url = import.meta.env.VITE_SERVER_URL;
@@ -16,34 +17,33 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-
     if (!formData.email || !formData.password) {
       setError('All fields are required');
       return;
     }
 
     try {
-     
-      const response = await axios.post(`${url}/api/user/login`, formData);
+      setLoading(true); // Disable form submission
 
+      const response = await axios.post(`${url}/api/user/login`, formData);
 
       if (response.data.status === 'success') {
         toast.success(response.data.message, { position: 'top-right' });
         localStorage.setItem('authtoken', response.data.token);
-        navigate('/home'); 
+        navigate('/home');
       } else {
-      
         setError(response.data.message);
       }
     } catch (err) {
       console.error('Login error:', err);
 
-      
       if (err.response && err.response.data) {
         setError(err.response.data.message || 'An error occurred');
       } else {
         setError('An error occurred. Please try again.');
       }
+    } finally {
+      setLoading(false); // Re-enable the button after the request completes
     }
   };
 
@@ -59,6 +59,7 @@ const SignIn = () => {
             className="w-full p-2 border border-gray-300 rounded"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            disabled={loading} // Disable input during submission
           />
         </div>
         <div className="mb-6">
@@ -68,23 +69,30 @@ const SignIn = () => {
             className="w-full p-2 border border-gray-300 rounded"
             value={formData.password}
             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            disabled={loading} // Disable input during submission
           />
         </div>
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 mb-4">
-          Sign In
+        <button
+          type="submit"
+          className={`w-full p-2 rounded text-white ${loading ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'} mb-4`}
+          disabled={loading} // Disable button during submission
+        >
+          {loading ? 'Signing In...' : 'Sign In'}
         </button>
         <div className="flex flex-col gap-2">
           <button
             type="button"
             onClick={() => navigate('/signup')}
             className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600"
+            disabled={loading} // Prevent navigation during loading
           >
-            Don't have an account? 
+            Don't have an account?
           </button>
           <button
             type="button"
             onClick={() => navigate('/resetemailsend')}
             className="w-full bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600"
+            disabled={loading} // Prevent navigation during loading
           >
             Forgot Password
           </button>

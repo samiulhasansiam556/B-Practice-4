@@ -15,7 +15,7 @@ class TodoController {
       console.log(error);
       res.send({ status: "failed", message: "Unable to create todo" });
     }
-    
+     
   };
 
   static getTodos = async (req, res) => {

@@ -10,6 +10,7 @@ const ResetPassword = () => {
     password_confirmation: '',
   });
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // New loading state
   const navigate = useNavigate();
 
   const url = import.meta.env.VITE_SERVER_URL;
@@ -27,6 +28,8 @@ const ResetPassword = () => {
       setError("Passwords don't match");
       return;
     }
+
+    setIsLoading(true); // Set loading state to true
 
     try {
       // Post request to backend API
@@ -49,6 +52,8 @@ const ResetPassword = () => {
       } else {
         setError('An error occurred. Please try again.');
       }
+    } finally {
+      setIsLoading(false); // Set loading state back to false
     }
   };
 
@@ -75,8 +80,12 @@ const ResetPassword = () => {
             onChange={(e) => setFormData({ ...formData, password_confirmation: e.target.value })}
           />
         </div>
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
-          Reset Password
+        <button
+          type="submit"
+          className={`w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={isLoading} // Disable button when loading
+        >
+          {isLoading ? 'Resetting...' : 'Reset Password'}
         </button>
       </form>
     </div>

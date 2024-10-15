@@ -12,6 +12,8 @@ class UserController {
     static userRegistration = async (req, res) => {
         const { name, email, password, password_confirmation } = req.body
         const user = await UserModel.findOne({ email: email })
+        console.log(password);
+        console.log(password_confirmation);
         if (user) {
           res.send({ "status": "failed", "message": "Email already exists" })
         } else {
