@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
-function CreateTodo({ isModalOpen, setIsModalOpen }) {
+function CreateTodo({ isModalOpen, setIsModalOpen,onTodoCreated }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false); // Track request status
@@ -25,6 +25,7 @@ function CreateTodo({ isModalOpen, setIsModalOpen }) {
       setTitle('');
       setDescription('');
       setIsModalOpen(false);
+      onTodoCreated();
     } catch (error) {
       toast.error(error.message || 'Failed to create todo');
     } finally {

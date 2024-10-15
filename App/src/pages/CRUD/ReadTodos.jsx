@@ -80,7 +80,9 @@ function ReadTodos() {
         todo={selectedTodo}
         onUpdate={fetchTodos}
       />
-      <CreateTodo isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <CreateTodo isModalOpen={isModalOpen}
+       onTodoCreated={fetchTodos}
+      setIsModalOpen={setIsModalOpen} />
 
       {loading ? (
         <div className="flex justify-center items-center h-48">
